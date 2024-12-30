@@ -1,0 +1,4 @@
+<odoo>
+    <menuitem id="todo_root_menu" name="To-Do" web_icon="todo_management,static/description/to_do.png"/>
+    <menuitem id="todo_main_menu" name="To-Do" parent="todo_root_menu"/>
+</odoo>
