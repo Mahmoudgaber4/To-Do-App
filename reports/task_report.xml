@@ -1,0 +1,124 @@
+<odoo>
+    <record id="task_report" model="ir.actions.report">
+        <field name="name">Task Report</field>
+        <field name="model">todo.task</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="binding_model_id" ref="model_todo_task"/>
+        <field name="binding_type">report</field>
+        <field name="report_name">todo_management.task_report_template</field>
+    </record>
+    <template id="task_report_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-foreach="docs" t-as="rec">
+                    <style>
+                        .body{
+                            width: 100%;
+                            margin-top: 30px;
+                        }
+                        .body tbody{
+                            counter-reset: rowNumber;
+                        }
+                        .body tbody tr {
+                            counter-increment: rowNumber;
+                        }
+
+                         .body tbody tr td.row-number::before {
+                            content: counter(rowNumber);
+                        }
+                        .body th {
+                            color: #000 !important;
+                            text-align: center;
+                            border: 2px solid #000;
+                            padding: 10px;
+                            font-size: 25px;
+                        }
+                        .body td {
+                            color: #000 !important;
+                            text-align: center;
+                            border: 2px solid #000;
+                            padding: 5px;
+                            font-size: 25px;
+                        }
+                        .description{
+                            width:100%;
+                            margin-top: 30px;
+                            font-size: 25px;
+                            color: #000 !important;
+                        }
+                        .description h2{
+                            color: #000 !important;
+                        }
+                        .heading
+                        {
+                            width: 40%;
+                            padding: 5px;
+                            font-size: 25px;
+                            text-align: left !important;
+                            border: #fff !important;
+                        }
+                        .heading th {
+                            border: none !important;
+                             color: #000 !important;
+                        }
+                        .heading td {
+                            border: none !important;
+                             color: #000 !important;
+                        }
+                    </style>
+                    <table class="heading">
+                        <thead>
+                            <tr>
+                                <th><strong>Task: </strong></th>
+                                <td><t t-esc="rec.task_name"/></td>
+                            </tr>
+                            <tr>
+                                <th><strong>Due Date: </strong></th>
+                                <td><t t-esc="rec.due_date"/></td>
+                            </tr>
+                            <tr>
+                                <th><strong>Assign To: </strong></th>
+                                <td><span t-field="rec.assign_to"/></td>
+                            </tr>
+                            <tr>
+                                <th><strong>Estimated Time: </strong></th>
+                                <td><t t-esc="rec.estimated_time"/>hours</td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="description">
+                        <h2> <strong>Description:</strong></h2>
+                        <h4>You have to call all customers to collect feedback and ensure there is no problem with them.</h4>
+                    </div>
+                    <table class="body">
+                        <thead>
+                            <tr><th colspan="4"><strong>Timesheet</strong></th></tr>
+                            <tr>
+                                <th><pan><strong>#</strong></pan></th>
+                                <th><strong>Date</strong></th>
+                                <th><strong>Description</strong></th>
+                                <th><strong>Time</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="rec.line_ids" t-as="line">
+                                <tr>
+                                    <td class="row-number"></td>
+                                    <td><t t-esc="line.date"/></td>
+                                    <td><t t-esc="line.description"/></td>
+                                    <td><t t-esc="line.time"/>hours</td>
+                                </tr>
+                            </t>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3"><strong>Timesheet</strong></td>
+                                <td><t t-esc="sum(rec.line_ids.mapped('time'))"/>hours</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

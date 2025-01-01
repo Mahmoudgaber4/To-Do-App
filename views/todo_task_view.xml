@@ -3,12 +3,14 @@
         <field name="name">To-Do Tree View</field>
         <field name="model">todo.task</field>
         <field name="arch" type="xml">
-            <tree multi_edit="1">
+            <tree class="header_custom_task" decoration-danger="(is_late)">
                 <field name="task_name"/>
+                <field name="is_late" invisible="1" optional="1"/>
                 <field name="assign_to"/>
                 <field name="description" optional="1"/>
                 <field name="due_date"/>
                 <field name="state"/>
+                <field name="estimated_time" optional="1"/>
             </tree>
         </field>
     </record>
@@ -20,7 +22,7 @@
                 <sheet>
                     <header>
                         <button name="action_new" type="object" string="Set to new" class="btn btn-primary"
-                                invisible="state in ['new','completed']"/>
+                                invisible="state == 'new'"/>
                          <button name="action_in_progress" type="object" string="In progress" class="btn btn-secondary"
                                 invisible="state != 'new'"/>
                          <button name="action_completed" type="object" string="Completed" class="btn btn-success"
@@ -37,12 +39,26 @@
                          <group string="Task Info">
                              <field name="assign_to"/>
                              <field name="due_date"/>
-                             <field name="state"/>
+                             <field name="is_late"/>
+                             <field name="state" invisible="1"/>
+                             <field name="estimated_time"/>
+                             <field name="active" invisible="1"/>
                         </group>
                         <group string="Description">
                             <field name="description" required="1"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Timesheet">
+                            <field name="line_ids">
+                                <tree editable="button">
+                                    <field name="date"/>
+                                    <field name="description"/>
+                                    <field name="time"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                     <div class="oe_chatter">
                         <field name="message_follower_ids"/>
                         <field name="activity_ids"/>
@@ -67,6 +83,27 @@
                 <filter name="due_date" string="Due Date" context="{'group_by': 'due_date'}"/>
             </search>
         </field>
+    </record>
+    <record id="task_closed_server_action" model="ir.actions.server">
+        <field name="name">Closed</field>
+        <field name="model_id" ref="model_todo_task"/>
+        <field name="binding_model_id" ref="model_todo_task"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_closed()
+        </field>
+    </record>
+    <record id="check_passed_due_date_cron" model="ir.cron">
+        <field name="name">To-Do Task: Check Due Date</field>
+        <field name="model_id" ref="model_todo_task"/>
+        <field name="state">code</field>
+        <field name="code">
+            model.check_passed_due_date()
+        </field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
     </record>
     <record id="all_tasks_action" model="ir.actions.act_window">
         <field name="name">All Tasks</field>

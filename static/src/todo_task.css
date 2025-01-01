@@ -1,0 +1,8 @@
+.header_custom_task table thead > tr > th {
+background: #b3b3b3 !important;
+color: #fff !important;
+text-align: center !important;
+}
+.header_custom_task table tbody > tr > td {
+text-align: center !important;
+}
