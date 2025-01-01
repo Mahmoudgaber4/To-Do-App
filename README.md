@@ -25,3 +25,19 @@
 
 ### 5. Extras:
 - Add Chatter for updates.
+
+## Phase Two
+### 1.Lines:
+- Add estimated_time, log task_id, description, date, time, and ensure total time ≤ estimated.
+- 
+### 2.Archiving:
+- Add archive/unarchive functionality for records.
+- 
+### 3.Close Tickets:
+- Add a server action to mark tickets as closed.
+- 
+### 4.Alerts & Highlighting:
+- Auto-flag overdue due_date tasks and color them red in tree view if new or in_progress.
+- 
+### 5.Reports:
+- Implement a report action for tasks.
